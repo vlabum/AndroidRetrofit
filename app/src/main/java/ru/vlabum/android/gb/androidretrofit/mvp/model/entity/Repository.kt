@@ -2,13 +2,24 @@ package ru.vlabum.android.gb.androidretrofit.mvp.model.entity
 
 import com.google.gson.annotations.Expose
 
-class Repository {
+class Repository : IRepository {
+
     @Expose
     private lateinit var name: String
 
-    fun getName() = name
+    @Expose
+    private lateinit var id: String
 
-    fun setName(name: String) {
+    override fun getName() = name
+
+    override fun setName(name: String) {
         this.name = name
     }
+
+    override fun getId() = id
+
+    override fun setId(id: String) {
+        this.id = id
+    }
+
 }

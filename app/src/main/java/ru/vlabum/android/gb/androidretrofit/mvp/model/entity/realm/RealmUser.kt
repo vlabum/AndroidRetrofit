@@ -1,16 +1,15 @@
-package ru.vlabum.android.gb.androidretrofit.mvp.model.entity
+package ru.vlabum.android.gb.androidretrofit.mvp.model.entity.realm
 
-import com.google.gson.annotations.Expose
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
 
-class User() : IUser {
+open class RealmUser() : RealmObject(), IUser {
 
-    @Expose
+    @PrimaryKey
     private lateinit var login: String
-
-    @Expose
     private lateinit var avatarUrl: String
-
-    @Expose
     private lateinit var reposUrl: String
 
     constructor(login: String, avatarUrl: String, reposUrl: String) : this() {
@@ -18,6 +17,8 @@ class User() : IUser {
         this.avatarUrl = avatarUrl
         this.reposUrl = reposUrl
     }
+
+    private var repos = RealmList<RealmRepository>()
 
     override fun getLogin() = login
 
@@ -35,6 +36,14 @@ class User() : IUser {
 
     override fun setReposUrl(reposUrl: String) {
         this.reposUrl = reposUrl
+    }
+
+    fun getRepos(): RealmList<RealmRepository> {
+        return repos
+    }
+
+    fun setRepos(repos: RealmList<RealmRepository>) {
+        this.repos = repos
     }
 
 }
