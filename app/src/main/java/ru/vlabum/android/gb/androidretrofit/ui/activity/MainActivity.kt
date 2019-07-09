@@ -16,12 +16,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.vlabum.android.gb.androidretrofit.R
 import ru.vlabum.android.gb.androidretrofit.mvp.model.image.IImageLoader
+import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.ICache
 import ru.vlabum.android.gb.androidretrofit.mvp.presenter.MainPresenter
 import ru.vlabum.android.gb.androidretrofit.mvp.view.IMainView
 import ru.vlabum.android.gb.androidretrofit.ui.adapter.ReposRVAdapter
+import ru.vlabum.android.gb.androidretrofit.ui.cache.PiperCache
+import ru.vlabum.android.gb.androidretrofit.ui.cache.RealmCache
+import ru.vlabum.android.gb.androidretrofit.ui.cache.RoomCache
 import ru.vlabum.android.gb.androidretrofit.ui.image.PicassoImageLoader
 
-class IMainActivity : MvpAppCompatActivity(), IMainView {
+class MainActivity : MvpAppCompatActivity(), IMainView {
 
     companion object {
         val PERMISSION_INTERTET = 199
@@ -34,9 +38,13 @@ class IMainActivity : MvpAppCompatActivity(), IMainView {
 
     val imageLoader: IImageLoader<ImageView> = PicassoImageLoader()
 
+    val piperCache: ICache = PiperCache()
+    val roomCache: ICache = RoomCache()
+    val realmCache: ICache = RealmCache()
+
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
-        return MainPresenter(AndroidSchedulers.mainThread())
+        return MainPresenter(AndroidSchedulers.mainThread(), roomCache)
     }
 
     override fun init() {

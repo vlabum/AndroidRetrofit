@@ -1,16 +1,17 @@
-package ru.vlabum.android.gb.androidretrofit.mvp.model.entity
+package ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room
 
-import com.google.gson.annotations.Expose
+import androidx.annotation.NonNull
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
 
-class User() : IUser {
+@Entity
+class RoomUser() : IUser {
 
-    @Expose
+    @NonNull
+    @PrimaryKey
     private lateinit var login: String
-
-    @Expose
     private lateinit var avatarUrl: String
-
-    @Expose
     private lateinit var reposUrl: String
 
     constructor(login: String, avatarUrl: String, reposUrl: String) : this() {
@@ -36,5 +37,4 @@ class User() : IUser {
     override fun setReposUrl(reposUrl: String) {
         this.reposUrl = reposUrl
     }
-
 }
