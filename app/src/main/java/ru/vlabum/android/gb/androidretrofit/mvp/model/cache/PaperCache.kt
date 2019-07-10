@@ -1,13 +1,12 @@
-package ru.vlabum.android.gb.androidretrofit.ui.cache
+package ru.vlabum.android.gb.androidretrofit.mvp.model.cache
 
 import io.paperdb.Paper
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.Repository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.User
-import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.ICache
 
-class PiperCache : ICache {
+class PaperCache : ICache {
 
     companion object {
         private val usersBook = "users"

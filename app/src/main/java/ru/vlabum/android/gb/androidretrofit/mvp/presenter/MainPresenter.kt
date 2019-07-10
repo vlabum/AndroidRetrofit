@@ -7,13 +7,13 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
-import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.GitHubRepo
-import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.ICache
+import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.IGitHubRepo
 import ru.vlabum.android.gb.androidretrofit.mvp.view.IMainView
 import ru.vlabum.android.gb.androidretrofit.mvp.view.IRepositoryRowView
+import javax.inject.Inject
 
 @InjectViewState
-class MainPresenter(val mainThreadScheduler: Scheduler, val cache: ICache) : MvpPresenter<IMainView>() {
+class MainPresenter(val mainThreadScheduler: Scheduler) : MvpPresenter<IMainView>() {
 
     class RepositoryListPresenter : IRepositoryListPresenter {
 
@@ -34,12 +34,14 @@ class MainPresenter(val mainThreadScheduler: Scheduler, val cache: ICache) : Mvp
 
     }
 
-    private var gitHubRepo: GitHubRepo
+    @Inject
+    lateinit var gitHubRepo: IGitHubRepo
+
     private var repositoryListPresenter: RepositoryListPresenter
 
     init {
-        gitHubRepo = GitHubRepo()
-        gitHubRepo.setCache(cache)
+//        gitHubRepo = GitHubRepo()
+//        gitHubRepo.setCache(cache)
         repositoryListPresenter = RepositoryListPresenter()
     }
 

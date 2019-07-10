@@ -4,6 +4,8 @@ import android.app.Application
 import io.paperdb.Paper
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import ru.vlabum.android.gb.androidretrofit.di.AppComponent
+import ru.vlabum.android.gb.androidretrofit.di.DaggerAppComponent
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.db.Database
 import timber.log.Timber
 
@@ -15,6 +17,9 @@ class App : Application() {
             return instance
         }
     }
+
+    private lateinit var appComponent: AppComponent
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -30,6 +35,12 @@ class App : Application() {
             .deleteRealmIfMigrationNeeded()
             .build()
         Realm.setDefaultConfiguration(config)
+
+        appComponent = DaggerAppComponent.builder()
+            .build()
+
     }
+
+    fun getAppComponent() = appComponent
 
 }

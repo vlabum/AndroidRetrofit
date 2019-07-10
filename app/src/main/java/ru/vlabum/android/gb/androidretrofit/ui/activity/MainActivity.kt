@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -14,16 +13,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.vlabum.android.gb.androidretrofit.App
 import ru.vlabum.android.gb.androidretrofit.R
-import ru.vlabum.android.gb.androidretrofit.mvp.model.image.IImageLoader
-import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.ICache
 import ru.vlabum.android.gb.androidretrofit.mvp.presenter.MainPresenter
 import ru.vlabum.android.gb.androidretrofit.mvp.view.IMainView
 import ru.vlabum.android.gb.androidretrofit.ui.adapter.ReposRVAdapter
-import ru.vlabum.android.gb.androidretrofit.ui.cache.PiperCache
-import ru.vlabum.android.gb.androidretrofit.ui.cache.RealmCache
-import ru.vlabum.android.gb.androidretrofit.ui.cache.RoomCache
-import ru.vlabum.android.gb.androidretrofit.ui.image.PicassoImageLoader
+import ru.vlabum.android.gb.androidretrofit.ui.image.GlideImageLoader
 
 class MainActivity : MvpAppCompatActivity(), IMainView {
 
@@ -36,21 +31,24 @@ class MainActivity : MvpAppCompatActivity(), IMainView {
 
     lateinit var adapter: ReposRVAdapter
 
-    val imageLoader: IImageLoader<ImageView> = PicassoImageLoader()
+    val imageLoader = GlideImageLoader()
 
-    val piperCache: ICache = PiperCache()
-    val roomCache: ICache = RoomCache()
-    val realmCache: ICache = RealmCache()
+//    val piperCache: ICache = PaperCache()
+//    val roomCache: ICache = RoomCache()
+//    val realmCache: ICache = RealmCache()
 
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
-        return MainPresenter(AndroidSchedulers.mainThread(), roomCache)
+        val presenter = MainPresenter(AndroidSchedulers.mainThread())
+        App.getInstance().getAppComponent().inject(presenter)
+        return presenter
     }
 
     override fun init() {
         rv.layoutManager = LinearLayoutManager(this)
         adapter = ReposRVAdapter(presenter.getRepositoryListPresenter())
         rv.adapter = adapter
+        App.getInstance().getAppComponent().inject(imageLoader)
     }
 
     override fun updateList() {

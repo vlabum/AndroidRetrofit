@@ -1,11 +1,10 @@
-package ru.vlabum.android.gb.androidretrofit.ui.cache
+package ru.vlabum.android.gb.androidretrofit.mvp.model.cache
 
 import io.realm.Realm
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.realm.RealmRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.realm.RealmUser
-import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.ICache
 import java.util.*
 
 class RealmCache : ICache {

@@ -1,10 +1,7 @@
 package ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.Query
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomUser
 
 @Dao
@@ -19,13 +16,13 @@ interface UserDao {
     @Insert(onConflict = REPLACE)
     abstract fun insert(user: List<RoomUser>)
 
-    @Insert
+    @Update
     abstract fun update(user: RoomUser)
 
-    @Insert
+    @Update
     abstract fun update(vararg user: RoomUser)
 
-    @Insert
+    @Update
     abstract fun update(user: List<RoomUser>)
 
     @Delete
@@ -39,7 +36,6 @@ interface UserDao {
 
     @Query("SELECT * FROM roomuser")
     abstract fun getAll(): List<RoomUser>
-
 
     @Query("SELECT * FROM roomuser WHERE login = :login LIMIT 1")
     abstract fun findByLogin(login: String): RoomUser

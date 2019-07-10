@@ -1,10 +1,7 @@
 package ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.Query
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomRepository
 
 @Dao
@@ -18,13 +15,13 @@ interface RepositoryDao {
     @Insert(onConflict = REPLACE)
     abstract fun insert(repository: List<RoomRepository>)
 
-    @Insert
+    @Update
     abstract fun update(repository: RoomRepository)
 
-    @Insert
+    @Update
     abstract fun update(vararg repository: RoomRepository)
 
-    @Insert
+    @Update
     abstract fun update(repository: List<RoomRepository>)
 
     @Delete

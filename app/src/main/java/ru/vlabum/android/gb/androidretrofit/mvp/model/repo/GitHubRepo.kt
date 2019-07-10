@@ -2,33 +2,34 @@ package ru.vlabum.android.gb.androidretrofit.mvp.model.repo
 
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import ru.vlabum.android.gb.androidretrofit.mvp.model.api.ApiHolder
+import ru.vlabum.android.gb.androidretrofit.mvp.model.api.IDataSource
 import ru.vlabum.android.gb.androidretrofit.mvp.model.api.INetworkStatus
+import ru.vlabum.android.gb.androidretrofit.mvp.model.cache.ICache
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.User
-import ru.vlabum.android.gb.androidretrofit.ui.NetworkStatus
 
-class GitHubRepo {
+class GitHubRepo(
+    private val dataSource: IDataSource,
+    private val networkStatus: INetworkStatus,
+    private val cache: ICache
+) : IGitHubRepo {
 
-    internal var networkStatus: INetworkStatus = NetworkStatus()
+//    fun setCache(cache: ICache) {
+//        this.cache = cache
+//    }
 
-    private var cache: ICache? = null
 
-    fun setCache(cache: ICache) {
-        this.cache = cache
-    }
-
-    fun getUser(username: String): Single<IUser> {
+    override fun getUser(username: String): Single<IUser> {
         if (networkStatus.isOnline()) {
-            return ApiHolder.getApi().getUser(username).subscribeOn(Schedulers.io())
+            return dataSource.getUser(username).subscribeOn(Schedulers.io())
                 .map { user ->
-                    cache?.saveUser(user)
+                    cache.saveUser(user)
                     user
                 }
         } else {
             return Single.create<IUser> { emitter ->
-                val user: IUser? = cache?.getUser(username)
+                val user: IUser? = cache.getUser(username)
                 if (user == null) {
                     emitter.onError(RuntimeException("No such user in cache"))
                 } else {
@@ -39,20 +40,20 @@ class GitHubRepo {
         }
     }
 
-    fun getUserRepos(user: IUser): Single<List<IRepository>> {
+    override fun getUserRepos(user: IUser): Single<List<IRepository>> {
         if (networkStatus.isOnline()) {
-            return ApiHolder.getApi().getUserRepos(user.getReposUrl()).subscribeOn(Schedulers.io())
+            return dataSource.getUserRepos(user.getReposUrl()).subscribeOn(Schedulers.io())
                 .map { repos ->
-                    cache?.saveUserRepos(user, repos)
+                    cache.saveUserRepos(user, repos)
                     repos
                 }
         } else {
             return Single.create { emitter ->
-                val userInner: IUser? = cache?.getUser(user.getLogin())
+                val userInner: IUser? = cache.getUser(user.getLogin())
                 if (userInner == null) {
                     emitter.onError(java.lang.RuntimeException("No such user in cache"))
                 } else {
-                    val repos: List<IRepository>? = cache?.getUserRepos(userInner)
+                    val repos: List<IRepository>? = cache.getUserRepos(userInner)
                     repos?.let {
                         emitter.onSuccess(it)
                     }
