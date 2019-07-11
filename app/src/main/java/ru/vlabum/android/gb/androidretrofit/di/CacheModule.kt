@@ -12,7 +12,7 @@ class CacheModule {
 
     @Singleton
     @Provides
-    fun imageCache(@Named("imageRealm") imageCacheDb: IImageCacheDb): ImageCache {
+    fun imageCache(@Named("imageRoom") imageCacheDb: IImageCacheDb): ImageCache {
         return ImageCache(imageCacheDb, AndroidSchedulers.mainThread())
     }
 

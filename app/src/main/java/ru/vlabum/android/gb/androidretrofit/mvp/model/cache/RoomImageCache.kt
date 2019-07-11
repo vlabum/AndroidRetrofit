@@ -1,5 +1,8 @@
 package ru.vlabum.android.gb.androidretrofit.mvp.model.cache
 
+import io.reactivex.Observable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IImage
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomImage
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.db.Database
@@ -7,8 +10,17 @@ import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.db.Database
 class RoomImageCache : IImageCacheDb {
 
     override fun findFirst(url: String): IImage? {
-        return Database.getInstance().getImageDao()
-            .findByUrl(url)
+        var image: RoomImage? = null
+        val observable: Observable<RoomImage> = Observable.fromCallable {
+            Database.getInstance().getImageDao().findByUrl(url)
+        }
+        val d = observable.subscribeOn(Schedulers.io())
+            .subscribe(Consumer { img ->
+                image = img
+            })
+        return image
+//        return Database.getInstance().getImageDao()
+//            .findByUrl(url)
     }
 
     override fun contains(url: String): Boolean {
@@ -20,16 +32,19 @@ class RoomImageCache : IImageCacheDb {
     }
 
     override fun saveImage(url: String, path: String) {
-        var roomImage: RoomImage? = Database.getInstance().getImageDao()
-            .findByUrl(url)
 
-        if (roomImage == null) {
-            roomImage = RoomImage()
-            roomImage.setUrl(url)
-            roomImage.setPath(path)
+        val d = Observable.fromCallable {
+            var roomImage: RoomImage? = Database.getInstance().getImageDao()
+                .findByUrl(url)
+            if (roomImage == null) {
+                roomImage = RoomImage()
+                roomImage.setUrl(url)
+                roomImage.setPath(path)
+            }
+
+            Database.getInstance().getImageDao().insert(roomImage)
         }
-
-        Database.getInstance().getImageDao()
-            .insert(roomImage)
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 }
