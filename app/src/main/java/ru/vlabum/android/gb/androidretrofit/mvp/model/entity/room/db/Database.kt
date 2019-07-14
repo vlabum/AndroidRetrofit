@@ -3,12 +3,16 @@ package ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.db
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomImage
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomUser
+import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.dao.ImageDao
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.dao.RepositoryDao
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.dao.UserDao
 
-@androidx.room.Database(entities = [RoomUser::class, RoomRepository::class], version = 1)
+@androidx.room.Database(entities = [RoomUser::class, RoomRepository::class, RoomImage::class], version = 2)
 abstract class Database : RoomDatabase() {
 
     companion object {
@@ -23,7 +27,15 @@ abstract class Database : RoomDatabase() {
                 context.applicationContext,
                 Database::class.java,
                 DB_NAME
-            ).build()
+            )
+                .addMigrations(object : Migration(1, 2) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        database.execSQL("CREATE TABLE RoomImage (url text primary key not null, path text not null)")
+                        return
+                    }
+
+                })
+                .build()
         }
 
         @Synchronized
@@ -39,5 +51,7 @@ abstract class Database : RoomDatabase() {
     abstract fun getUserDao(): UserDao
 
     abstract fun getRepositoryDao(): RepositoryDao
+
+    abstract fun getImageDao(): ImageDao
 
 }

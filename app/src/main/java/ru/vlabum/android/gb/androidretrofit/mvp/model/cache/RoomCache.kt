@@ -1,11 +1,10 @@
-package ru.vlabum.android.gb.androidretrofit.ui.cache
+package ru.vlabum.android.gb.androidretrofit.mvp.model.cache
 
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomRepository
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.RoomUser
 import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.room.db.Database
-import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.ICache
 import java.util.*
 
 class RoomCache : ICache {
