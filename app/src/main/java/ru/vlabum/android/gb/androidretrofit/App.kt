@@ -1,7 +1,7 @@
 package ru.vlabum.android.gb.androidretrofit
 
 import android.app.Application
-import io.paperdb.Paper
+//import io.paperdb.Paper
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import ru.vlabum.android.gb.androidretrofit.di.AppComponent
@@ -26,7 +26,7 @@ class App : Application() {
         Timber.plant(Timber.DebugTree())
         Timber.d("start")
 
-        Paper.init(this)
+//        Paper.init(this)
 
         Database.create(this)
 

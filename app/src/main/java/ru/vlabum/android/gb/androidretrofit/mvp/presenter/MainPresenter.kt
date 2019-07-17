@@ -10,10 +10,11 @@ import ru.vlabum.android.gb.androidretrofit.mvp.model.entity.IUser
 import ru.vlabum.android.gb.androidretrofit.mvp.model.repo.IGitHubRepo
 import ru.vlabum.android.gb.androidretrofit.mvp.view.IMainView
 import ru.vlabum.android.gb.androidretrofit.mvp.view.IRepositoryRowView
+import timber.log.Timber
 import javax.inject.Inject
 
 @InjectViewState
-class MainPresenter(val mainThreadScheduler: Scheduler) : MvpPresenter<IMainView>() {
+open class MainPresenter(val mainThreadScheduler: Scheduler) : MvpPresenter<IMainView>() {
 
     class RepositoryListPresenter : IRepositoryListPresenter {
 
@@ -47,31 +48,32 @@ class MainPresenter(val mainThreadScheduler: Scheduler) : MvpPresenter<IMainView
 
     fun getRepositoryListPresenter() = repositoryListPresenter
 
-    override fun onFirstViewAttach() {
+    override public fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.init()
-        loadUsers()
+        Timber.d("onFirstViewAttach")
+        getViewState().init()
+        loadUsers("googlesamples")
 
         val d = repositoryListPresenter.getClickSubject().subscribe { repoRowView ->
             viewState.showMessage(repositoryListPresenter.repos[repoRowView.getPos()].getName())
         }
     }
 
-    private fun loadUsers() {
+    fun loadUsers(userName: String) {
+        Timber.d("lllllloooooaaaaad")
         viewState.showLoading()
-        val d = gitHubRepo.getUser("googlesamples")
+        val d = gitHubRepo.getUser(userName)
             .subscribeOn(Schedulers.io())
             .observeOn(mainThreadScheduler)
             .subscribe { user ->
                 loadUserRepos(user)
-                viewState.hideLoading()
                 viewState.setUsername(user.getLogin())
                 viewState.loadImage(user.getAvatarUrl())
+                viewState.hideLoading()
             }
     }
 
-    private fun loadUserRepos(user: IUser) {
-        viewState.showLoading()
+    fun loadUserRepos(user: IUser) {
         val d = gitHubRepo.getUserRepos(user)
             .subscribeOn(Schedulers.io())
             .observeOn(mainThreadScheduler)
@@ -79,7 +81,6 @@ class MainPresenter(val mainThreadScheduler: Scheduler) : MvpPresenter<IMainView
                 repositoryListPresenter.repos.clear()
                 repositoryListPresenter.repos.addAll(repositories)
                 viewState.updateList()
-                viewState.hideLoading()
             }
     }
 }

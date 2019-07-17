@@ -19,6 +19,7 @@ import ru.vlabum.android.gb.androidretrofit.mvp.presenter.MainPresenter
 import ru.vlabum.android.gb.androidretrofit.mvp.view.IMainView
 import ru.vlabum.android.gb.androidretrofit.ui.adapter.ReposRVAdapter
 import ru.vlabum.android.gb.androidretrofit.ui.image.GlideImageLoader
+import timber.log.Timber
 
 class MainActivity : MvpAppCompatActivity(), IMainView {
 
@@ -45,6 +46,7 @@ class MainActivity : MvpAppCompatActivity(), IMainView {
     }
 
     override fun init() {
+        Timber.d("init")
         rv.layoutManager = LinearLayoutManager(this)
         adapter = ReposRVAdapter(presenter.getRepositoryListPresenter())
         rv.adapter = adapter
