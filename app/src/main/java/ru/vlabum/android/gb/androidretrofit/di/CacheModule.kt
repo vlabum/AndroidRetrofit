@@ -8,34 +8,38 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class CacheModule {
+open class CacheModule {
 
     @Singleton
     @Provides
-    fun imageCache(@Named("imageRoom") imageCacheDb: IImageCacheDb): ImageCache {
+    open fun imageCache(@Named("imageRoom") imageCacheDb: IImageCacheDb): ImageCache {
         return ImageCache(imageCacheDb, AndroidSchedulers.mainThread())
     }
 
-    @Named("room")
-    @Singleton
     @Provides
-    fun roomCach(): ICache {
+    open fun getCache(@Named("room") cache: ICache): ICache {
+        return cache
+    }
+
+    @Named("room")
+    @Provides
+    open fun roomCach(): ICache {
         return RoomCache()
     }
 
     @Named("realm")
     @Singleton
     @Provides
-    fun realmCach(): ICache {
+    open fun realmCach(): ICache {
         return RealmCache()
     }
 
-    @Named("paper")
-    @Singleton
-    @Provides
-    fun paperCach(): ICache {
-        return PaperCache()
-    }
+//    @Named("paper")
+//    @Singleton
+//    @Provides
+//    open fun paperCach(): ICache {
+//        return PaperCache()
+//    }
 
     @Named("imageRoom")
     @Singleton
@@ -51,10 +55,10 @@ class CacheModule {
         return RealmImageCache()
     }
 
-    @Named("imagePaper")
-    @Singleton
-    @Provides
-    fun paperImageCache(): IImageCacheDb {
-        return PaperImageCache()
-    }
+//    @Named("imagePaper")
+//    @Singleton
+//    @Provides
+//    fun paperImageCache(): IImageCacheDb {
+//        return PaperImageCache()
+//    }
 }

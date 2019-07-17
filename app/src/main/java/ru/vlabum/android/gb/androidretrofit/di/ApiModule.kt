@@ -13,12 +13,12 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class ApiModule {
+open class ApiModule {
 
     @Named("baseUrl")
     @Singleton
     @Provides
-    fun baseUrl(): String {
+    open fun baseUrl(): String {
         return "https://api.github.com"
     }
 
